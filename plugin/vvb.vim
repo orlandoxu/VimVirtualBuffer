@@ -9,10 +9,14 @@ if !exists('g:vvb_ignore_files')
   let g:vvb_ignore_files = ['NERD_tree']
 endif
 
-if !exists('g:vvb_ignore_file_types')
-  let g:vvb_ignore_file_types = ["terminal", "quickfix", 'fugitive']
+if !exists('g:vvb_ignore_buffer_types')
+  let g:vvb_ignore_buffer_types = ["terminal", "quickfix", "nofile", "nowrite"]
 endif
 
+" filetype missing, case filetype may be async!!!
+" if !exists('g:vvb_ignore_file_types')
+"   let g:vvb_ignore_file_types = ["fugitive"]
+" endif
 
 " New buffer mode
 " tail / head / next
@@ -23,6 +27,8 @@ let s:bufferSortedList = []
 " First buffer using position = 1
 let s:buf_position = 0
 
+" Need reset buffer's meta!!
+" Case some meta is async!!
 function! s:resetBufferModified()
   for i in s:bufferSortedList
     let i[4] = getbufvar(i[0], '&mod')
@@ -33,6 +39,8 @@ function! RenderBufferTab()
   let render = ""
   let position = 1
   call s:resetBufferModified()
+  " echo s:bufferSortedList
+
   " for i in range(len(elements) - 2, 0)
   for i in s:bufferSortedList
     let hl = "%#BuffetBuffer#"
@@ -55,9 +63,13 @@ endfunction
 " Ignore files with type & name
 function! s:isIgnoredBufType(bufMeta)
   " Step 1. check buffer type
-  if index(g:vvb_ignore_file_types, a:bufMeta[3]) >= 0
+  if index(g:vvb_ignore_buffer_types, a:bufMeta[3]) >= 0
     return 1
   endif
+
+  " if index(g:vvb_ignore_file_types, a:bufMeta[5]) >= 0
+  "   return 1
+  " endif
 
   " Step 2. check ignore with filename
   for i in g:vvb_ignore_files
@@ -85,7 +97,7 @@ function s:getBufferMeta(bufNr)
   endif
 
   " [filename, filepath]
-  return [a:bufNr, strArr[len(strArr) - 1],  filepath,getbufvar(a:bufNr, '&buftype', ''), getbufvar(a:bufNr, '&mod')]
+  return [a:bufNr, strArr[len(strArr) - 1],  filepath, getbufvar(a:bufNr, '&buftype', ''), getbufvar(a:bufNr, '&mod')]
 endfunction
 
 " Init bufferList
@@ -259,6 +271,7 @@ augroup vvb_binding_event
   autocmd BufAdd * :call s:BufAddEvent(str2nr(expand("<abuf>")))
   autocmd BufDelete * :call s:BufDeleteEvent()
   autocmd BufLeave * :call s:BufLeaveEvent()
+  " autocmd BufType * :call s:BufLeaveEvent()
   " autocmd InsertChange * :call s:InsertChangeEvent(str2nr(expand("<abuf>")))
 augroup END
 
