@@ -11,6 +11,7 @@ Plug 'orlandoxu/VimVirtualBuffer'
 ```
 
 ### Go to left/right position
+> Notice: u can't using :bd to switch buffer, alter with BufPrev & BufNext. Bacause vim's buffer num cannot change!
 ```
 :BufPrev<CR>
 :BufNext<CR>
