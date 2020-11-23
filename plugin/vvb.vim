@@ -6,7 +6,7 @@
 "     default as next.
 
 if !exists('g:vvb_ignore_files')
-  let g:vvb_ignore_files = ['NERD_tree', 'quickfix']
+  let g:vvb_ignore_files = ['NERD_tree', 'quickfix', 'fugitive']
 endif
 
 " New buffer mode
