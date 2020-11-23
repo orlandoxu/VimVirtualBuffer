@@ -191,7 +191,6 @@ function! s:BufLeaveEvent()
 endfunction
 
 function! VimEnterEvent()
-  echom 'enter'
   let leaveBufNr = str2nr(expand('<abuf>'))
   let s:buf_position = 0
 
@@ -218,8 +217,6 @@ function! s:changeBufferMode2UserSetting()
 endfunction
 
 function! s:BufAddEvent(bufNr)
-  echom 'add'
-  echom a:bufNr
   let buffmeta = s:getBufferMeta(a:bufNr)
 
   " ignore buffer
