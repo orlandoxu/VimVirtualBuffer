@@ -6,8 +6,13 @@
 "     default as next.
 
 if !exists('g:vvb_ignore_files')
-  let g:vvb_ignore_files = ['NERD_tree', 'quickfix', 'fugitive']
+  let g:vvb_ignore_files = ['NERD_tree']
 endif
+
+if !exists('g:vvb_ignore_files')
+  let g:vvb_ignore_file_types = ["terminal", "quickfix", 'fugitive']
+endif
+
 
 " New buffer mode
 " tail / head / next
@@ -50,7 +55,7 @@ endfunction
 " Ignore files with type & name
 function! s:isIgnoredBufType(bufMeta)
   " Step 1. check buffer type
-  if index(["terminal", "quickfix"], a:bufMeta[3]) >= 0
+  if index(g:vvb_ignore_file_types, a:bufMeta[3]) >= 0
     return 1
   endif
 
