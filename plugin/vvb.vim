@@ -190,20 +190,36 @@ function! s:BufLeaveEvent()
   let s:buf_position = 0
 endfunction
 
-function! VimEnter()
+function! VimEnterEvent()
+  echom 'enter'
   let leaveBufNr = str2nr(expand('<abuf>'))
   let s:buf_position = 0
 
-  call s:getAllBuffers()
+  " call s:getAllBuffers()
+  call s:changeBufferMode2UserSetting()
+
+  " position 放在当前buffer
+  let currBufnr = bufnr('%')
+  let position = 0
+  for i in s:bufferSortedList
+    let position = position + 1
+    if i[0] == currBufnr
+      let s:buf_position = position
+      return
+    endif
+  endfor
 endfunction
 
 " Set buffer open mode 1s latter
 " to support vim-workspace.vim
-function! ChangeBufferMode2UserSetting(timer)
+" function! ChangeBufferMode2UserSetting(timer)
+function! s:changeBufferMode2UserSetting()
   let s:vvb_new_buffer_mode = get(g:, "vvb_new_buffer_mode", "next")
 endfunction
 
 function! s:BufAddEvent(bufNr)
+  echom 'add'
+  echom a:bufNr
   let buffmeta = s:getBufferMeta(a:bufNr)
 
   " ignore buffer
@@ -234,16 +250,15 @@ augroup vvb_binding_event
   autocmd!
   autocmd VimEnter * set showtabline=2
   " autocmd VimEnter,BufAdd,TabEnter * set showtabline=2
-  autocmd VimEnter * :call timer_start(1000, "ChangeBufferMode2UserSetting")
+  autocmd VimEnter * :call VimEnterEvent()
+  " no need to using timer, using VimEnter 
+  " autocmd VimEnter * :call timer_start(1000, "ChangeBufferMode2UserSetting")
   autocmd BufEnter * :call s:BufEnterEvent(str2nr(expand("<abuf>")))
   autocmd BufAdd * :call s:BufAddEvent(str2nr(expand("<abuf>")))
   autocmd BufDelete * :call s:BufDeleteEvent()
   autocmd BufLeave * :call s:BufLeaveEvent()
   " autocmd InsertChange * :call s:InsertChangeEvent(str2nr(expand("<abuf>")))
 augroup END
-
-" :call s:getWindowSize()
-" :call s:getAllBuffers()
 
 function! s:SetColors()
   hi! BuffetCurrentBuffer cterm=NONE ctermbg=246 ctermfg=0 guibg=#00F00 guifg=#000000
