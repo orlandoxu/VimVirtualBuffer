@@ -288,11 +288,12 @@ function! s:moveBufLeft()
     return
   endif
 
-  let tmp = s:bufferSortedList[s:buf_position]
-  let s:bufferSortedList[s:buf_position] = s:bufferSortedList[s:buf_position - 1]
-  let s:bufferSortedList[s:buf_position - 1] = tmp
+  let tmp = s:bufferSortedList[s:buf_position - 1]
+  let s:bufferSortedList[s:buf_position - 1] = s:bufferSortedList[s:buf_position - 2]
+  let s:bufferSortedList[s:buf_position - 2] = tmp
 
   let s:buf_position = s:buf_position - 1
+  :redrawtabline
 endfunction
 
 function! s:moveBufRight()
@@ -300,12 +301,14 @@ function! s:moveBufRight()
     return
   endif
 
-  let tmp = s:bufferSortedList[s:buf_position]
-  let s:bufferSortedList[s:buf_position] = s:bufferSortedList[s:buf_position + 1]
-  let s:bufferSortedList[s:buf_position + 1] = tmp
+  let tmp = s:bufferSortedList[s:buf_position - 1]
+  let s:bufferSortedList[s:buf_position - 1] = s:bufferSortedList[s:buf_position]
+  let s:bufferSortedList[s:buf_position] = tmp
 
   let s:buf_position = s:buf_position + 1
+  :redrawtabline
 endfunction
+
 
 command! BufNext call s:bufNext()
 command! BufPrev call s:bufPrev()
