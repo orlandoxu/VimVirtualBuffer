@@ -9,7 +9,7 @@ if !exists('g:vvb_ignore_files')
   let g:vvb_ignore_files = ['NERD_tree']
 endif
 
-if !exists('g:vvb_ignore_files')
+if !exists('g:vvb_ignore_file_types')
   let g:vvb_ignore_file_types = ["terminal", "quickfix", 'fugitive']
 endif
 
